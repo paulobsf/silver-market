@@ -29,13 +29,17 @@ public class Summary {
         case BUY:
           buyConsolidatedOperations.put(
             order.getPrice(),
-            buyConsolidatedOperations.getOrDefault(order.getPrice(), 0f) + order.getQuantity()
+            operation.getType() == Operation.Type.REGISTER
+              ? buyConsolidatedOperations.getOrDefault(order.getPrice(), 0f) + order.getQuantity()
+              : buyConsolidatedOperations.getOrDefault(order.getPrice(), 0f) - order.getQuantity()
           );
           break;
         case SELL:
           sellConsolidatedOperations.put(
             order.getPrice(),
-            sellConsolidatedOperations.getOrDefault(order.getPrice(), 0f) + order.getQuantity()
+            operation.getType() == Operation.Type.REGISTER
+              ? sellConsolidatedOperations.getOrDefault(order.getPrice(), 0f) + order.getQuantity()
+              : sellConsolidatedOperations.getOrDefault(order.getPrice(), 0f) - order.getQuantity()
           );
           break;
       }

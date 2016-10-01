@@ -3,18 +3,34 @@ package me.pauloferreira.silvermarket.model;
 import java.util.UUID;
 
 public class Order {
-  private final UUID id;
+  private final UUID userId;
   private final float quantity;  //  assuming always in KG
   private final float price;     //  assuming always in GBP
   private final Type type;
 
-  public enum Type { BUY, Sell; }
+  public enum Type { BUY, SELL; }
 
-  public Order(UUID id, float quantity, float price, Type type) {
-    this.id = id;
+  public Order(UUID userId, float quantity, float price, Type type) {
+    this.userId = userId;
     this.quantity = quantity;
     this.price = price;
     this.type = type;
+  }
+
+  public UUID getUserId() {
+    return userId;
+  }
+
+  public float getQuantity() {
+    return quantity;
+  }
+
+  public float getPrice() {
+    return price;
+  }
+
+  public Type getType() {
+    return type;
   }
 
   @Override public boolean equals(Object o) {
@@ -29,14 +45,14 @@ public class Order {
       return false;
     if (Float.compare(order.price, price) != 0)
       return false;
-    if (!id.equals(order.id))
+    if (!userId.equals(order.userId))
       return false;
     return type == order.type;
 
   }
 
   @Override public int hashCode() {
-    int result = id.hashCode();
+    int result = userId.hashCode();
     result = 31 * result + (quantity != +0.0f ? Float.floatToIntBits(quantity) : 0);
     result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
     result = 31 * result + type.hashCode();

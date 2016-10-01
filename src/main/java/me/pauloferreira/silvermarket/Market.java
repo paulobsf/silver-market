@@ -2,6 +2,7 @@ package me.pauloferreira.silvermarket;
 
 import me.pauloferreira.silvermarket.model.Operation;
 import me.pauloferreira.silvermarket.model.Order;
+import me.pauloferreira.silvermarket.model.Summary;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -13,11 +14,15 @@ public class Market {
     operations = new ConcurrentLinkedQueue<>();
   }
 
-  public void registerOrder(Order order) {
+  public void register(Order order) {
     operations.add(new Operation(order, Operation.Type.REGISTER));
   }
 
-  public void cancelOrder(Order order) {
+  public void cancel(Order order) {
     operations.add(new Operation(order, Operation.Type.CANCEL));
+  }
+
+  public Summary getSummary() {
+    return Summary.of(operations);
   }
 }

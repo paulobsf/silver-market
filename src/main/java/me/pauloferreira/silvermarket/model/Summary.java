@@ -23,7 +23,6 @@ public class Summary {
 
     operations.forEach(operation -> {
       Order order = operation.getOrder();
-
       consolidatedOperations.get(order.getType()).put(
         order.getPrice(),
         operation.getType() == Operation.Type.REGISTER
@@ -43,5 +42,23 @@ public class Summary {
       // SELL: sort price ascending; BUY: fort price descending
       .sorted((price1, price2) -> orderType == Order.Type.SELL ? price1.compareTo(price2) : price2.compareTo(price1))
       .collect(Collectors.toList());
+  }
+
+  @Override public String toString() {
+    StringBuilder builder = new StringBuilder();
+
+    List<Float> buyPrices = getPrices(Order.Type.BUY);
+    Map<Float, Float> buyOperations = getOperations(Order.Type.BUY);
+
+    builder.append("BUY\n---");
+    buyPrices.forEach(price -> builder.append(String.format("\n%.2f kg for £%.0f", buyOperations.get(price), price)));
+
+    List<Float> sellPrices = getPrices(Order.Type.SELL);
+    Map<Float, Float> sellOperations = getOperations(Order.Type.SELL);
+
+    builder.append("\n\nSELL\n---");
+    sellPrices.forEach(price -> builder.append(String.format("\n%.2f kg for £%.0f", sellOperations.get(price), price)));
+
+    return builder.toString();
   }
 }

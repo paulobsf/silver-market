@@ -120,4 +120,40 @@ public class SummaryTest {
     assertThat(consolidatedOperations.get(20f), is(equalTo(9f)));
   }
 
+  @Test public void mixedOperations() throws Exception {
+    Collection<Operation> operations = new ArrayList<Operation>() {{
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(1f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(2f).setPrice(10f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(5f).setPrice(20f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(6f).setPrice(20f)));
+      add(new Operation(Operation.Type.CANCEL, Order.build(Order.Type.SELL, USER_ID).setQuantity(6f).setPrice(20f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(1f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(2f).setPrice(10f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(5f).setPrice(20f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(6f).setPrice(20f)));
+      add(new Operation(Operation.Type.CANCEL, Order.build(Order.Type.BUY, USER_ID).setQuantity(6f).setPrice(20f)));
+    }};
+
+    String expectedOutput = "BUY\n"
+      + "---\n"
+      + "9.00 kg for £20\n"
+      + "3.00 kg for £10\n"
+      + "\n"
+      + "SELL\n"
+      + "---\n"
+      + "3.00 kg for £10\n"
+      + "9.00 kg for £20";
+
+    summary = Summary.of(operations);
+
+    assertThat(summary.toString(), is(equalTo(expectedOutput)));
+  }
+
 }

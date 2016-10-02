@@ -33,10 +33,6 @@ public class Summary {
     return new Summary(consolidatedOperations);
   }
 
-  Map<Float, Float> getOperations(Order.Type orderType) {
-    return consolidatedOperations.get(orderType);
-  }
-
   public List<Float> getPrices(Order.Type orderType) {
     return consolidatedOperations.get(orderType).keySet().stream()
       // SELL: sort price ascending; BUY: fort price descending

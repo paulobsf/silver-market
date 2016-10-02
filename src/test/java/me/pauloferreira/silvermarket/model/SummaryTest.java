@@ -18,7 +18,8 @@ public class SummaryTest {
 
   private Summary summary;
 
-  @Test public void buyOperations() throws Exception {
+  @Test
+  public void buyOperations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(1f).setPrice(10f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(2f).setPrice(10f)));
@@ -40,7 +41,8 @@ public class SummaryTest {
     assertThat(summary.getQuantity(Order.Type.BUY, 20f), is(equalTo(15f)));
   }
 
-  @Test public void buyOperationsSorted() throws Exception {
+  @Test
+  public void buyOperationsSorted() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
@@ -56,7 +58,8 @@ public class SummaryTest {
     assertThat(summaryPrices.get(1), is(equalTo(10f)));
   }
 
-  @Test public void buyOperationsWithCancellations() throws Exception {
+  @Test
+  public void buyOperationsWithCancellations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(1f).setPrice(10f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(2f).setPrice(10f)));
@@ -72,7 +75,8 @@ public class SummaryTest {
     assertThat(consolidatedOperations.get(10f), is(equalTo(3f)));
   }
 
-  @Test public void sellOperations() throws Exception {
+  @Test
+  public void sellOperations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(1f).setPrice(10f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(2f).setPrice(10f)));
@@ -91,7 +95,8 @@ public class SummaryTest {
     assertThat(consolidatedOperations.get(20f), is(equalTo(15f)));
   }
 
-  @Test public void sellOperationsSorted() throws Exception {
+  @Test
+  public void sellOperationsSorted() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
@@ -107,7 +112,8 @@ public class SummaryTest {
     assertThat(summaryPrices.get(1), is(equalTo(20f)));
   }
 
-  @Test public void sellOperationsWithCancellations() throws Exception {
+  @Test
+  public void sellOperationsWithCancellations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(4f).setPrice(20f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(5f).setPrice(20f)));
@@ -123,7 +129,8 @@ public class SummaryTest {
     assertThat(consolidatedOperations.get(20f), is(equalTo(9f)));
   }
 
-  @Test public void mixedOperations() throws Exception {
+  @Test
+  public void mixedOperations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(1f).setPrice(10f)));
       add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(2f).setPrice(10f)));

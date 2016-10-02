@@ -1,11 +1,14 @@
 package me.pauloferreira.silvermarket;
 
+import me.pauloferreira.silvermarket.model.InvalidCancelOperationException;
 import me.pauloferreira.silvermarket.model.Operation;
 import me.pauloferreira.silvermarket.model.Order;
 import me.pauloferreira.silvermarket.model.Summary;
 
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 public class Market {
   private final Queue<Operation> operations;
@@ -18,8 +21,19 @@ public class Market {
     operations.add(new Operation(Operation.Type.REGISTER, order));
   }
 
-  public void cancel(Order order) {
+  public void cancel(Order order) throws InvalidCancelOperationException {
+    validateCancelOperation(order);
     operations.add(new Operation(Operation.Type.CANCEL, order));
+  }
+
+  private void validateCancelOperation(Order order) throws InvalidCancelOperationException {
+    Set<Operation> matchingOrders = operations.stream().filter(operation -> operation.getOrder().equals(order)).collect(Collectors.toSet());
+    long registerOperations = matchingOrders.stream().filter(operation -> operation.getType() == Operation.Type.REGISTER).count();
+    long cancelOperations = matchingOrders.size() - registerOperations;
+
+    if (registerOperations == cancelOperations) {
+      throw new InvalidCancelOperationException(String.format("Found %d matching register and %d cancel operations", registerOperations, cancelOperations));
+    }
   }
 
   public Summary getSummary() {

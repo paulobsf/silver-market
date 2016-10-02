@@ -3,10 +3,10 @@ package me.pauloferreira.silvermarket.model;
 import java.util.UUID;
 
 public class Order {
+  private final Type type;
   private final UUID userId;
   private final float quantity;  //  assuming always in Kg
   private final float price;     //  assuming always in GBP
-  private final Type type;
 
   public enum Type { BUY, SELL }
 
@@ -33,6 +33,10 @@ public class Order {
     Order setPrice(float price);
   }
 
+  public Type getType() {
+    return type;
+  }
+
   public UUID getUserId() {
     return userId;
   }
@@ -43,10 +47,6 @@ public class Order {
 
   public float getPrice() {
     return price;
-  }
-
-  public Type getType() {
-    return type;
   }
 
   @Override public boolean equals(Object o) {

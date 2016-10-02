@@ -1,5 +1,6 @@
 package me.pauloferreira.silvermarket;
 
+import me.pauloferreira.silvermarket.model.InvalidCancelOperationException;
 import me.pauloferreira.silvermarket.model.Order;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,15 +12,24 @@ public class MarketTest {
 
   private Market market;
 
-  @Before public void setup() {
+  @Before
+  public void setup() {
     market = new Market();
   }
 
-  @Test public void register() throws Exception {
+  @Test
+  public void register() throws Exception {
     market.register(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
   }
 
-  @Test public void cancel() throws Exception {
+  @Test
+  public void cancel() throws Exception {
+    market.register(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
+    market.cancel(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
+  }
+
+  @Test(expected = InvalidCancelOperationException.class)
+  public void cancelInvalid() throws Exception {
     market.cancel(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
   }
 

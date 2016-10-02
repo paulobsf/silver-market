@@ -1,6 +1,6 @@
 package me.pauloferreira.silvermarket;
 
-import me.pauloferreira.silvermarket.model.InvalidCancelOperationException;
+import me.pauloferreira.silvermarket.exception.InvalidOperationException;
 import me.pauloferreira.silvermarket.model.Order;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class MarketTest {
     market.cancel(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
   }
 
-  @Test(expected = InvalidCancelOperationException.class)
+  @Test(expected = InvalidOperationException.class)
   public void cancelInvalid() throws Exception {
     market.cancel(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
   }

@@ -5,12 +5,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class SummaryTest {
@@ -32,12 +29,12 @@ public class SummaryTest {
 
     summary = Summary.of(operations);
 
-    List<Float> summaryBuyPrices = summary.getPrices(Order.Type.BUY);
+    List<Float> summaryPrices = summary.getPrices(Order.Type.BUY);
 
-    assertThat(summaryBuyPrices.contains(10f), is(true));
+    assertThat(summaryPrices.contains(10f), is(true));
     assertThat(summary.getQuantity(Order.Type.BUY, 10f), is(equalTo(6f)));
 
-    assertThat(summaryBuyPrices.contains(20f), is(true));
+    assertThat(summaryPrices.contains(20f), is(true));
     assertThat(summary.getQuantity(Order.Type.BUY, 20f), is(equalTo(15f)));
   }
 
@@ -70,9 +67,7 @@ public class SummaryTest {
 
     summary = Summary.of(operations);
 
-    Map<Float, Float> consolidatedOperations = summary.getOperations(Order.Type.BUY);
-
-    assertThat(consolidatedOperations.get(10f), is(equalTo(3f)));
+    assertThat(summary.getQuantity(Order.Type.BUY, 10f), is(equalTo(3f)));
   }
 
   @Test
@@ -89,10 +84,13 @@ public class SummaryTest {
 
     summary = Summary.of(operations);
 
-    Map<Float, Float> consolidatedOperations = summary.getOperations(Order.Type.SELL);
+    List<Float> summaryPrices = summary.getPrices(Order.Type.SELL);
 
-    assertThat(consolidatedOperations.get(10f), is(equalTo(6f)));
-    assertThat(consolidatedOperations.get(20f), is(equalTo(15f)));
+    assertThat(summaryPrices.contains(10f), is(true));
+    assertThat(summary.getQuantity(Order.Type.SELL, 10f), is(equalTo(6f)));
+
+    assertThat(summaryPrices.contains(20f), is(true));
+    assertThat(summary.getQuantity(Order.Type.SELL, 20f), is(equalTo(15f)));
   }
 
   @Test
@@ -124,9 +122,7 @@ public class SummaryTest {
 
     summary = Summary.of(operations);
 
-    Map<Float, Float> consolidatedOperations = summary.getOperations(Order.Type.SELL);
-
-    assertThat(consolidatedOperations.get(20f), is(equalTo(9f)));
+    assertThat(summary.getQuantity(Order.Type.SELL, 20f), is(equalTo(9f)));
   }
 
   @Test

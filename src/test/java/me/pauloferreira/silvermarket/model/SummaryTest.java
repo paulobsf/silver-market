@@ -31,10 +31,13 @@ public class SummaryTest {
 
     summary = Summary.of(operations);
 
-    Map<Float, Float> consolidatedOperations = summary.getOperations(Order.Type.BUY);
+    List<Float> summaryBuyPrices = summary.getPrices(Order.Type.BUY);
 
-    assertThat(consolidatedOperations.get(10f), is(equalTo(6f)));
-    assertThat(consolidatedOperations.get(20f), is(equalTo(15f)));
+    assertThat(summaryBuyPrices.contains(10f), is(true));
+    assertThat(summary.getQuantity(Order.Type.BUY, 10f), is(equalTo(6f)));
+
+    assertThat(summaryBuyPrices.contains(20f), is(true));
+    assertThat(summary.getQuantity(Order.Type.BUY, 20f), is(equalTo(15f)));
   }
 
   @Test public void buyOperationsSorted() throws Exception {

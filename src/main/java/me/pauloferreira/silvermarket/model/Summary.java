@@ -33,7 +33,7 @@ public class Summary {
     return new Summary(consolidatedOperations);
   }
 
-  public Map<Float, Float> getOperations(Order.Type orderType) {
+  Map<Float, Float> getOperations(Order.Type orderType) {
     return consolidatedOperations.get(orderType);
   }
 
@@ -44,20 +44,22 @@ public class Summary {
       .collect(Collectors.toList());
   }
 
+  public float getQuantity(Order.Type orderType, float price) {
+    return consolidatedOperations.get(orderType).get(price);
+  }
+
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
 
     List<Float> buyPrices = getPrices(Order.Type.BUY);
-    Map<Float, Float> buyOperations = getOperations(Order.Type.BUY);
 
     builder.append("BUY\n---");
-    buyPrices.forEach(price -> builder.append(String.format("\n%.2f kg for £%.0f", buyOperations.get(price), price)));
+    buyPrices.forEach(price -> builder.append(String.format("\n%.2f kg for £%.0f", getQuantity(Order.Type.BUY, price), price)));
 
     List<Float> sellPrices = getPrices(Order.Type.SELL);
-    Map<Float, Float> sellOperations = getOperations(Order.Type.SELL);
 
     builder.append("\n\nSELL\n---");
-    sellPrices.forEach(price -> builder.append(String.format("\n%.2f kg for £%.0f", sellOperations.get(price), price)));
+    sellPrices.forEach(price -> builder.append(String.format("\n%.2f kg for £%.0f", getQuantity(Order.Type.BUY, price), price)));
 
     return builder.toString();
   }

@@ -4,25 +4,29 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class SummaryTest {
+  private static final UUID USER_ID = UUID.randomUUID();
+
   private Summary summary;
 
   @Test public void buyOperations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
-      add(new Operation(new Order(UUID.randomUUID(), 1f, 10f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 2f, 10f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 3f, 10f, Order.Type.BUY), Operation.Type.REGISTER));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(1f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(2f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(3f).setPrice(10f)));
 
-      add(new Operation(new Order(UUID.randomUUID(), 4f, 20f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 5f, 20f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 6f, 20f, Order.Type.BUY), Operation.Type.REGISTER));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(5f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(6f).setPrice(20f)));
     }};
 
     summary = Summary.of(operations);
@@ -33,12 +37,29 @@ public class SummaryTest {
     assertThat(consolidatedOperations.get(20f), is(equalTo(15f)));
   }
 
+  @Test public void buyOperationsSorted() throws Exception {
+    Collection<Operation> operations = new ArrayList<Operation>() {{
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, UUID.randomUUID()).setQuantity(1f).setPrice(10f)));
+    }};
+
+    summary = Summary.of(operations);
+    List<Float> summaryPrices = summary.getPrices(Order.Type.BUY);
+
+    assertThat(summaryPrices, is(notNullValue()));
+    assertThat(summaryPrices.size(), is(equalTo(2)));
+    assertThat(summaryPrices.get(0), is(equalTo(20f)));
+    assertThat(summaryPrices.get(1), is(equalTo(10f)));
+  }
+
   @Test public void buyOperationsWithCancellations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
-      add(new Operation(new Order(UUID.randomUUID(), 1f, 10f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 2f, 10f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 3f, 10f, Order.Type.BUY), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 3f, 10f, Order.Type.BUY), Operation.Type.CANCEL));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(1f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(2f).setPrice(10f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.BUY, USER_ID).setQuantity(3f).setPrice(10f)));
+      add(new Operation(Operation.Type.CANCEL, Order.build(Order.Type.BUY, USER_ID).setQuantity(3f).setPrice(10f)));
     }};
 
     summary = Summary.of(operations);
@@ -50,13 +71,13 @@ public class SummaryTest {
 
   @Test public void sellOperations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
-      add(new Operation(new Order(UUID.randomUUID(), 1f, 10f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 2f, 10f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 3f, 10f, Order.Type.SELL), Operation.Type.REGISTER));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(1f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(2f).setPrice(10f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(3f).setPrice(10f)));
 
-      add(new Operation(new Order(UUID.randomUUID(), 4f, 20f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 5f, 20f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 6f, 20f, Order.Type.SELL), Operation.Type.REGISTER));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(5f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(6f).setPrice(20f)));
     }};
 
     summary = Summary.of(operations);
@@ -67,12 +88,29 @@ public class SummaryTest {
     assertThat(consolidatedOperations.get(20f), is(equalTo(15f)));
   }
 
+  @Test public void sellOperationsSorted() throws Exception {
+    Collection<Operation> operations = new ArrayList<Operation>() {{
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, UUID.randomUUID()).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, UUID.randomUUID()).setQuantity(1f).setPrice(10f)));
+    }};
+
+    summary = Summary.of(operations);
+    List<Float> summaryPrices = summary.getPrices(Order.Type.SELL);
+
+    assertThat(summaryPrices, is(notNullValue()));
+    assertThat(summaryPrices.size(), is(equalTo(2)));
+    assertThat(summaryPrices.get(0), is(equalTo(10f)));
+    assertThat(summaryPrices.get(1), is(equalTo(20f)));
+  }
+
   @Test public void sellOperationsWithCancellations() throws Exception {
     Collection<Operation> operations = new ArrayList<Operation>() {{
-      add(new Operation(new Order(UUID.randomUUID(), 4f, 20f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 5f, 20f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 6f, 20f, Order.Type.SELL), Operation.Type.REGISTER));
-      add(new Operation(new Order(UUID.randomUUID(), 6f, 20f, Order.Type.SELL), Operation.Type.CANCEL));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(4f).setPrice(20f)));
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(5f).setPrice(20f)));
+
+      add(new Operation(Operation.Type.REGISTER, Order.build(Order.Type.SELL, USER_ID).setQuantity(6f).setPrice(20f)));
+      add(new Operation(Operation.Type.CANCEL, Order.build(Order.Type.SELL, USER_ID).setQuantity(6f).setPrice(20f)));
     }};
 
     summary = Summary.of(operations);

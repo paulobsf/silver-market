@@ -9,7 +9,7 @@ public class Operation {
 
   public enum Type { REGISTER, CANCEL; }
 
-  public Operation(Order order, Type type) {
+  public Operation(Type type, Order order) {
     this.order = order;
     this.type = type;
     this.timestamp = Instant.now();

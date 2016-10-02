@@ -15,11 +15,11 @@ public class Market {
   }
 
   public void register(Order order) {
-    operations.add(new Operation(order, Operation.Type.REGISTER));
+    operations.add(new Operation(Operation.Type.REGISTER, order));
   }
 
   public void cancel(Order order) {
-    operations.add(new Operation(order, Operation.Type.CANCEL));
+    operations.add(new Operation(Operation.Type.CANCEL, order));
   }
 
   public Summary getSummary() {

@@ -4,17 +4,33 @@ import java.util.UUID;
 
 public class Order {
   private final UUID userId;
-  private final float quantity;  //  assuming always in KG
+  private final float quantity;  //  assuming always in Kg
   private final float price;     //  assuming always in GBP
   private final Type type;
 
-  public enum Type { BUY, SELL; }
+  public enum Type { BUY, SELL }
 
-  public Order(UUID userId, float quantity, float price, Type type) {
+  private Order(Type type, UUID userId, float quantity, float price) {
     this.userId = userId;
     this.quantity = quantity;
     this.price = price;
     this.type = type;
+  }
+
+  /*
+   * Terse builder pattern implementation using lambdas and functional interfaces
+   * Added to remove potential confusion over the order for quantity and price
+   */
+  public static BuilderSetQuantity build(Type type, UUID userId) {
+    return qtt -> pr -> new Order(type, userId, qtt, pr);
+  }
+
+  public interface BuilderSetQuantity {
+    BuilderSetPrice setQuantity(float quantity);
+  }
+
+  public interface BuilderSetPrice {
+    Order setPrice(float price);
   }
 
   public UUID getUserId() {

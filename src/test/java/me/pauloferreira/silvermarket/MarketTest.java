@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.util.UUID;
 
 public class MarketTest {
+  private static final UUID USER_ID = UUID.randomUUID();
+
   private Market market;
 
   @Before public void setup() {
@@ -14,11 +16,11 @@ public class MarketTest {
   }
 
   @Test public void register() throws Exception {
-    market.register(new Order(UUID.randomUUID(), 2.5f, 300f, Order.Type.BUY));
+    market.register(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
   }
 
   @Test public void cancel() throws Exception {
-    market.cancel(new Order(UUID.randomUUID(), 2.5f, 300f, Order.Type.BUY));
+    market.cancel(Order.build(Order.Type.BUY, USER_ID).setQuantity(2.5f).setPrice(300f));
   }
 
 }
